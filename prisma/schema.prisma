@@ -1,0 +1,27 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["interactiveTransactions"]
+}
+
+model Pipeline {
+  id       String   @id @default(cuid())
+  name     String
+  steps    Step[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Step {
+  id       String   @id @default(cuid())
+  name     String
+  pipeline  Pipeline @relation(fields: [pipelineId], references: [id])
+  pipelineId String
+  order    Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
